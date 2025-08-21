@@ -1,25 +1,25 @@
 // Ejemplo de datos JSON (puedes cargarlo desde un archivo externo)
-const partidosData = [
-    {
-        id: 1,
-        equipo_local: "Real Madrid",
-        equipo_visitante: "Barcelona",
-        fecha: "2025-08-20",
-        resultado: "2-1",
-        posesion_local: "55%",
-        posesion_visitante: "45%",
-        tiros_a_puerta: 8
-    },
-    {
-        id: 2,
-        equipo_local: "Manchester United",
-        equipo_visitante: "Liverpool",
-        fecha: "2025-08-21",
-        resultado: "0-0",
-        corners: 5,
-        faltas: 12
-    }
-];
+// const partidosData = [
+//     {
+//         id: 1,
+//         equipo_local: "Real Madrid",
+//         equipo_visitante: "Barcelona",
+//         fecha: "2025-08-20",
+//         resultado: "2-1",
+//         posesion_local: "55%",
+//         posesion_visitante: "45%",
+//         tiros_a_puerta: 8
+//     },
+//     {
+//         id: 2,
+//         equipo_local: "Manchester United",
+//         equipo_visitante: "Liverpool",
+//         fecha: "2025-08-21",
+//         resultado: "0-0",
+//         corners: 5,
+//         faltas: 12
+//     }
+// ];
 
 // Función para cargar y mostrar los partidos
 function mostrarPartidos(data) {
@@ -53,11 +53,11 @@ function mostrarPartidos(data) {
 // Cargar los datos al iniciar
 document.addEventListener('DOMContentLoaded', () => {
     // Si los datos están en un archivo JSON externo, descomenta esto:
-    /*
+    
     fetch('partidos.json')
         .then(response => response.json())
         .then(data => mostrarPartidos(data))
         .catch(error => console.error('Error al cargar el JSON:', error));
-    */
+    
     mostrarPartidos(partidosData); // Usar datos locales para el ejemplo
 });
