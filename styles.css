@@ -17,8 +17,8 @@ h1 {
 }
 
 .partidos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    display: flex;
+    flex-direction: column;
     gap: 20px;
 }
 
@@ -27,24 +27,65 @@ h1 {
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    transition: transform 0.2s;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
 }
 
-.partido-card:hover {
-    transform: translateY(-5px);
+.equipo {
+    flex: 1;
+    padding: 10px;
+    text-align: left;
 }
 
-.partido-card h2 {
+.equipo h2 {
     margin: 0 0 10px;
     font-size: 1.5em;
     color: #2c3e50;
 }
 
-.partido-card p {
+.equipo p {
     margin: 5px 0;
     color: #555;
 }
 
-.partido-card strong {
+.equipo strong {
     color: #333;
+}
+
+.vs {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #e74c3c;
+    text-align: center;
+    flex: 0 0 50px;
+}
+
+.datos-comunes {
+    margin-top: 15px;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+    text-align: center;
+}
+
+.datos-comunes p {
+    margin: 5px 0;
+    color: #555;
+}
+
+.datos-comunes strong {
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .partido-card {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .vs {
+        margin: 10px 0;
+    }
 }

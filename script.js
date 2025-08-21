@@ -1,50 +1,91 @@
-// Ejemplo de datos JSON (puedes cargarlo desde un archivo externo)
+// Ejemplo de datos JSON
 // const partidosData = [
 //     {
-//         id: 1,
-//         equipo_local: "Real Madrid",
-//         equipo_visitante: "Barcelona",
-//         fecha: "2025-08-20",
-//         resultado: "2-1",
-//         posesion_local: "55%",
-//         posesion_visitante: "45%",
-//         tiros_a_puerta: 8
-//     },
-//     {
-//         id: 2,
-//         equipo_local: "Manchester United",
-//         equipo_visitante: "Liverpool",
-//         fecha: "2025-08-21",
-//         resultado: "0-0",
-//         corners: 5,
-//         faltas: 12
+//         "id": 3,
+//         "liga": "Copa Sudamericana",
+//         "equipo_local": "Lanús",
+//         "equipo_visitante": "Central Córdoba",
+//         "Rango de cuota local": "1,50 - 1,99",
+//         "total_partidos_local": "5",
+//         "victorias_local": "4",
+//         "empates_local": "1",
+//         "fecha": "2025-08-21",
+//         "resultado": "sin resultado",
+//         "corners": "sin resultado",
+//         "faltas": "sin resultado",
+//         "rango de cuota visitante": "+3.00",
+//         "total_partidos_visitante": "3",
+//         "victorias_visitante": "0",
+//         "empates_visitante": "3",
+//         "NOTA": "Estas probabildades estan basadas en la cuota del equipo de Lanús en sus ultimos 5 partidos"
 //     }
 // ];
 
-// Función para cargar y mostrar los partidos
+// Función para mostrar los partidos
 function mostrarPartidos(data) {
     const container = document.getElementById('partidos-container');
     
     data.forEach(partido => {
-        // Crear una tarjeta para cada partido
+        // Crear tarjeta para el partido
         const card = document.createElement('div');
         card.classList.add('partido-card');
 
-        // Título con equipos
-        const title = document.createElement('h2');
-        title.textContent = `${partido.equipo_local || 'Equipo Local'} vs ${partido.equipo_visitante || 'Equipo Visitante'}`;
-        card.appendChild(title);
+        // Equipo Local
+        const equipoLocal = document.createElement('div');
+        equipoLocal.classList.add('equipo');
+        const localTitle = document.createElement('h2');
+        localTitle.textContent = partido.equipo_local || 'Equipo Local';
+        equipoLocal.appendChild(localTitle);
 
-        // Iterar dinámicamente sobre los campos del JSON
+        // Mostrar estadísticas del equipo local
         for (const [key, value] of Object.entries(partido)) {
-            if (key !== 'id' && key !== 'equipo_local' && key !== 'equipo_visitante') {
+            if (key.includes('local') && key !== 'equipo_local') {
                 const p = document.createElement('p');
-                // Formatear el nombre del campo (por ejemplo, "tiros_a_puerta" -> "Tiros a Puerta")
-                const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+                const formattedKey = key.replace(/_local/g, '').replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
                 p.innerHTML = `<strong>${formattedKey}:</strong> ${value}`;
-                card.appendChild(p);
+                equipoLocal.appendChild(p);
             }
         }
+
+        // Separador VS
+        const vs = document.createElement('div');
+        vs.classList.add('vs');
+        vs.textContent = 'VS';
+
+        // Equipo Visitante
+        const equipoVisitante = document.createElement('div');
+        equipoVisitante.classList.add('equipo');
+        const visitanteTitle = document.createElement('h2');
+        visitanteTitle.textContent = partido.equipo_visitante || 'Equipo Visitante';
+        equipoVisitante.appendChild(visitanteTitle);
+
+        // Mostrar estadísticas del equipo visitante
+        for (const [key, value] of Object.entries(partido)) {
+            if (key.includes('visitante') && key !== 'equipo_visitante') {
+                const p = document.createElement('p');
+                const formattedKey = key.replace(/_visitante/g, '').replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+                p.innerHTML = `<strong>${formattedKey}:</strong> ${value}`;
+                equipoVisitante.appendChild(p);
+            }
+        }
+
+        // Datos comunes (liga, fecha, resultado, nota, etc.)
+        const datosComunes = document.createElement('div');
+        datosComunes.classList.add('datos-comunes');
+        for (const [key, value] of Object.entries(partido)) {
+            if (!key.includes('local') && !key.includes('visitante') && key !== 'id' && key !== 'equipo_local' && key !== 'equipo_visitante') {
+                const p = document.createElement('p');
+                const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+                p.innerHTML = `<strong>${formattedKey}:</strong> ${value}`;
+                datosComunes.appendChild(p);
+            }
+        }
+
+        // Agregar elementos a la tarjeta
+        card.appendChild(equipoLocal);
+        card.appendChild(vs);
+        card.appendChild(equipoVisitante);
+        card.appendChild(datosComunes);
 
         container.appendChild(card);
     });
@@ -52,7 +93,7 @@ function mostrarPartidos(data) {
 
 // Cargar los datos al iniciar
 document.addEventListener('DOMContentLoaded', () => {
-    // Si los datos están en un archivo JSON externo, descomenta esto:
+    // Si usas un archivo JSON externo, descomenta esto:
     
     fetch('partidos.json')
         .then(response => response.json())
