@@ -1,0 +1,21 @@
+[
+    {
+        "id": 1,
+        "equipo_local": "Real Madrid",
+        "equipo_visitante": "Barcelona",
+        "fecha": "2025-08-20",
+        "resultado": "2-1",
+        "posesion_local": "55%",
+        "posesion_visitante": "45%",
+        "tiros_a_puerta": 8
+    },
+    {
+        "id": 2,
+        "equipo_local": "Manchester United",
+        "equipo_visitante": "Liverpool",
+        "fecha": "2025-08-21",
+        "resultado": "0-0",
+        "corners": 5,
+        "faltas": 12
+    }
+]
