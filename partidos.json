@@ -16,6 +16,7 @@
         "total_partidos_visitante": "3",
         "victorias_visitante": "0",
         "empates_visitante": "3",
-        "NOTA": "Estas probabildades estan basadas en la cuota del equipo"
+        "NOTA": "Estas probabildades estan basadas en la cuota del equipo",
+        "PICK": "Lanús Gana o Empata"
     }
 ]
