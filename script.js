@@ -1,29 +1,62 @@
-// Ejemplo de datos JSON
-// const partidosData = [
-//     {
-//         "id": 3,
-//         "liga": "Copa Sudamericana",
-//         "equipo_local": "Lanús",
-//         "equipo_visitante": "Central Córdoba",
-//         "Rango de cuota local": "1,50 - 1,99",
-//         "total_partidos_local": "5",
-//         "victorias_local": "4",
-//         "empates_local": "1",
-//         "fecha": "2025-08-21",
-//         "resultado": "sin resultado",
-//         "corners": "sin resultado",
-//         "faltas": "sin resultado",
-//         "rango de cuota visitante": "+3.00",
-//         "total_partidos_visitante": "3",
-//         "victorias_visitante": "0",
-//         "empates_visitante": "3",
-//         "NOTA": "Estas probabildades estan basadas en la cuota del equipo de Lanús en sus ultimos 5 partidos"
-//     }
-// ];
+// Función para calcular la cuota promedio desde un rango o valor
+function calcularCuotaPromedio(cuota) {
+    try {
+        if (cuota.includes('-')) {
+            const [min, max] = cuota.split('-').map(val => parseFloat(val.trim()));
+            if (isNaN(min) || isNaN(max)) throw new Error('Cuota inválida');
+            console.log(`Cuota promedio para ${cuota}: ${(min + max) / 2}`);
+            return (min + max) / 2;
+        }
+        const cuotaNum = parseFloat(cuota.replace('+', '').trim());
+        if (isNaN(cuotaNum)) throw new Error('Cuota inválida');
+        console.log(`Cuota para ${cuota}: ${cuotaNum}`);
+        return cuotaNum;
+    } catch (error) {
+        console.error('Error al calcular cuota promedio:', error);
+        return 1; // Valor por defecto para evitar división por cero
+    }
+}
+
+// Función para calcular probabilidades combinando victorias y cuotas
+function calcularProbabilidades(partido) {
+    try {
+        // Probabilidad basada en victorias
+        const tasaLocalVictorias = partido.total_partidos_local > 0 ? parseInt(partido.victorias_local) / parseInt(partido.total_partidos_local) : 0;
+        const tasaVisitanteVictorias = partido.total_partidos_visitante > 0 ? parseInt(partido.victorias_visitante) / parseInt(partido.total_partidos_visitante) : 0;
+        console.log(`Tasa de victorias - Local: ${tasaLocalVictorias}, Visitante: ${tasaVisitanteVictorias}`);
+
+        // Probabilidad basada en cuotas
+        const cuotaLocalNum = calcularCuotaPromedio(partido['Rango de cuota local']);
+        const cuotaVisitanteNum = calcularCuotaPromedio(partido['rango de cuota visitante']);
+        const probLocalCuotas = (1 / cuotaLocalNum) / ((1 / cuotaLocalNum) + (1 / cuotaVisitanteNum)) * 100;
+        const probVisitanteCuotas = (1 / cuotaVisitanteNum) / ((1 / cuotaLocalNum) + (1 / cuotaVisitanteNum)) * 100;
+        console.log(`Probabilidad por cuotas - Local: ${probLocalCuotas.toFixed(1)}%, Visitante: ${probVisitanteCuotas.toFixed(1)}%`);
+
+        // Combinar: promedio ponderado (50% victorias, 50% cuotas)
+        const probLocal = (0.5 * tasaLocalVictorias * 100) + (0.5 * probLocalCuotas);
+        const probVisitante = (0.5 * tasaVisitanteVictorias * 100) + (0.5 * probVisitanteCuotas);
+        console.log(`Probabilidad combinada sin normalizar - Local: ${probLocal.toFixed(1)}%, Visitante: ${probVisitante.toFixed(1)}%`);
+
+        // Normalizar para que sumen 100%
+        const sumaProbs = probLocal + probVisitante;
+        if (sumaProbs === 0) {
+            console.log('Suma de probabilidades es 0, usando 50%/50%');
+            return { probLocal: 50.0, probVisitante: 50.0 };
+        }
+        const probLocalNorm = (probLocal / sumaProbs * 100).toFixed(1);
+        const probVisitanteNorm = (probVisitante / sumaProbs * 100).toFixed(1);
+        console.log(`Probabilidad final normalizada - Local: ${probLocalNorm}%, Visitante: ${probVisitanteNorm}%`);
+        return { probLocal: probLocalNorm, probVisitante: probVisitanteNorm };
+    } catch (error) {
+        console.error('Error al calcular probabilidades:', error);
+        return { probLocal: 50.0, probVisitante: 50.0 }; // Valor por defecto
+    }
+}
 
 // Función para mostrar los partidos
 function mostrarPartidos(data) {
     const container = document.getElementById('partidos-container');
+    container.innerHTML = ''; // Limpiar contenedor para evitar duplicados
     
     data.forEach(partido => {
         // Crear tarjeta para el partido
@@ -37,7 +70,7 @@ function mostrarPartidos(data) {
         localTitle.textContent = partido.equipo_local || 'Equipo Local';
         equipoLocal.appendChild(localTitle);
 
-        // Mostrar estadísticas del equipo local
+        // Mostrar estadísticas del equipo local (incluyendo rango de cuota)
         for (const [key, value] of Object.entries(partido)) {
             if (key.includes('local') && key !== 'equipo_local') {
                 const p = document.createElement('p');
@@ -59,7 +92,7 @@ function mostrarPartidos(data) {
         visitanteTitle.textContent = partido.equipo_visitante || 'Equipo Visitante';
         equipoVisitante.appendChild(visitanteTitle);
 
-        // Mostrar estadísticas del equipo visitante
+        // Mostrar estadísticas del equipo visitante (incluyendo rango de cuota)
         for (const [key, value] of Object.entries(partido)) {
             if (key.includes('visitante') && key !== 'equipo_visitante') {
                 const p = document.createElement('p');
@@ -72,6 +105,37 @@ function mostrarPartidos(data) {
         // Datos comunes (liga, fecha, resultado, nota, etc.)
         const datosComunes = document.createElement('div');
         datosComunes.classList.add('datos-comunes');
+
+        // Calcular y mostrar probabilidades
+        if (partido['Rango de cuota local'] && partido['rango de cuota visitante'] && 
+            partido.victorias_local && partido.total_partidos_local && 
+            partido.victorias_visitante && partido.total_partidos_visitante) {
+            const { probLocal, probVisitante } = calcularProbabilidades(partido);
+
+            // Añadir barra de probabilidad
+            const barraContainer = document.createElement('div');
+            barraContainer.classList.add('probabilidad-barra');
+            const barraLocal = document.createElement('div');
+            barraLocal.classList.add('barra-local');
+            barraLocal.style.width = `${probLocal}%`;
+            const barraVisitante = document.createElement('div');
+            barraVisitante.classList.add('barra-visitante');
+            barraVisitante.style.width = `${probVisitante}%`;
+            barraContainer.appendChild(barraLocal);
+            barraContainer.appendChild(barraVisitante);
+            datosComunes.appendChild(barraContainer);
+
+            // Añadir nota de probabilidad
+            const notaProb = document.createElement('p');
+            notaProb.innerHTML = `<strong>Probabilidad de Victoria:</strong> ${partido.equipo_local} ${probLocal}% vs ${partido.equipo_visitante} ${probVisitante}%`;
+            datosComunes.appendChild(notaProb);
+        } else {
+            const errorMsg = document.createElement('p');
+            errorMsg.innerHTML = `<strong>Error:</strong> Faltan datos para calcular la probabilidad`;
+            datosComunes.appendChild(errorMsg);
+        }
+
+        // Mostrar otros datos comunes
         for (const [key, value] of Object.entries(partido)) {
             if (!key.includes('local') && !key.includes('visitante') && key !== 'id' && key !== 'equipo_local' && key !== 'equipo_visitante') {
                 const p = document.createElement('p');
@@ -93,12 +157,18 @@ function mostrarPartidos(data) {
 
 // Cargar los datos al iniciar
 document.addEventListener('DOMContentLoaded', () => {
-    // Si usas un archivo JSON externo, descomenta esto:
-    
     fetch('partidos.json')
-        .then(response => response.json())
-        .then(data => mostrarPartidos(data))
-        .catch(error => console.error('Error al cargar el JSON:', error));
-    
-    mostrarPartidos(partidosData); // Usar datos locales para el ejemplo
+        .then(response => {
+            if (!response.ok) throw new Error('Error al cargar partidos.json');
+            return response.json();
+        })
+        .then(data => {
+            console.log('Datos cargados desde partidos.json:', data);
+            mostrarPartidos(data);
+        })
+        .catch(error => {
+            console.error('Error al cargar el JSON:', error);
+            console.log('Usando datos embebidos como respaldo');
+            mostrarPartidos(partidosData);
+        });
 });

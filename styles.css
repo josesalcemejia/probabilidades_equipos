@@ -79,6 +79,28 @@ h1 {
     color: #333;
 }
 
+.probabilidad-barra {
+    width: 100%;
+    height: 20px;
+    background: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    margin-top: 10px;
+}
+
+.barra-local {
+    height: 100%;
+    background: #3498db; /* Azul para equipo local */
+    transition: width 0.5s ease;
+}
+
+.barra-visitante {
+    height: 100%;
+    background: #e74c3c; /* Rojo para equipo visitante */
+    transition: width 0.5s ease;
+}
+
 @media (max-width: 768px) {
     .partido-card {
         flex-direction: column;
