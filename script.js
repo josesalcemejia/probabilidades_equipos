@@ -1,3 +1,5 @@
+
+
 // Función para calcular la cuota promedio desde un rango o valor
 function calcularCuotaPromedio(cuota) {
     try {
@@ -54,11 +56,24 @@ function calcularProbabilidades(partido) {
 }
 
 // Función para mostrar los partidos
-function mostrarPartidos(data) {
+function mostrarPartidos(data, fechaFiltro = null) {
     const container = document.getElementById('partidos-container');
     container.innerHTML = ''; // Limpiar contenedor para evitar duplicados
-    
-    data.forEach(partido => {
+
+    // Filtrar partidos por fecha si se proporciona un filtro
+    const partidosFiltrados = fechaFiltro
+        ? data.filter(partido => partido.fecha === fechaFiltro)
+        : data;
+
+    if (partidosFiltrados.length === 0) {
+        const noPartidos = document.createElement('p');
+        noPartidos.textContent = 'No hay partidos para la fecha seleccionada.';
+        noPartidos.style.color = '#e74c3c';
+        container.appendChild(noPartidos);
+        return;
+    }
+
+    partidosFiltrados.forEach(partido => {
         // Crear tarjeta para el partido
         const card = document.createElement('div');
         card.classList.add('partido-card');
@@ -155,8 +170,25 @@ function mostrarPartidos(data) {
     });
 }
 
+// Función para filtrar partidos por fecha
+let todosLosPartidos = []; // Almacenar todos los partidos cargados
+function filtrarPorFecha() {
+    const fechaSeleccionada = document.getElementById('fecha-picker').value;
+    console.log('Fecha seleccionada:', fechaSeleccionada);
+    mostrarPartidos(todosLosPartidos, fechaSeleccionada);
+}
+
 // Cargar los datos al iniciar
 document.addEventListener('DOMContentLoaded', () => {
+    // Inicializar Flatpickr
+    flatpickr('#fecha-picker', {
+        dateFormat: 'Y-m-d',
+        defaultDate: '2025-08-21', // Fecha por defecto (puedes cambiarla)
+        locale: {
+            firstDayOfWeek: 1 // Lunes como primer día de la semana
+        }
+    });
+
     fetch('partidos.json')
         .then(response => {
             if (!response.ok) throw new Error('Error al cargar partidos.json');
@@ -164,11 +196,13 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             console.log('Datos cargados desde partidos.json:', data);
-            mostrarPartidos(data);
+            todosLosPartidos = data; // Guardar todos los partidos
+            mostrarPartidos(todosLosPartidos); // Mostrar todos los partidos inicialmente
         })
         .catch(error => {
             console.error('Error al cargar el JSON:', error);
             console.log('Usando datos embebidos como respaldo');
-            mostrarPartidos(partidosData);
+            todosLosPartidos = partidosData;
+            mostrarPartidos(todosLosPartidos);
         });
 });

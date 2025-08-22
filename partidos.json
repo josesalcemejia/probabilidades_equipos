@@ -9,14 +9,37 @@
         "victorias_local": "4",
         "empates_local": "1",
         "fecha": "2025-08-21",
-        "resultado": "sin resultado",
-        "corners": "sin resultado",
-        "faltas": "sin resultado",
+        "resultado": "1-0",
+        "corners": "14",
+        "tiro a puerta": "11",
         "rango de cuota visitante": "+3.00",
         "total_partidos_visitante": "3",
         "victorias_visitante": "0",
         "empates_visitante": "3",
         "NOTA": "Estas probabildades estan basadas en la cuota del equipo",
-        "PICK": "Lanús Gana o Empata"
+        "PICK": "Lanús Gana o Empata ✅",
+        "CUOTA": "1.19"
+    },
+
+        {
+        "id": 4,
+        "liga": "Alemania - Bundesliga",
+        "equipo_local": "Bayern Múnich",
+        "equipo_visitante": "RB Leipzig",
+        "Rango de cuota local": "1.00 - 1.49",
+        "total_partidos_local": "9",
+        "victorias_local": "8",
+        "empates_local": "0",
+        "fecha": "2025-08-22",
+        "resultado": "sin resultado",
+        "corners": "sin resultado",
+        "tiros a puerta": "sin resultado",
+        "rango de cuota visitante": "+3.00",
+        "total_partidos_visitante": "1",
+        "victorias_visitante": "0",
+        "empates_visitante": "1",
+        "NOTA": "Estas probabildades estan basadas en la cuota del equipo",
+        "PICK": "Gana Bayern Múnich",
+        "CUOTA": "1.26"
     }
 ]
