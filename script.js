@@ -1,5 +1,14 @@
 
 
+// Función para formatear la fecha actual como YYYY-MM-DD
+function getFechaActual() {
+    const hoy = new Date();
+    const año = hoy.getFullYear();
+    const mes = String(hoy.getMonth() + 1).padStart(2, '0'); // Meses de 0 a 11, +1 y formato de 2 dígitos
+    const dia = String(hoy.getDate()).padStart(2, '0'); // Formato de 2 dígitos
+    return `${año}-${mes}-${dia}`;
+}
+
 // Función para calcular la cuota promedio desde un rango o valor
 function calcularCuotaPromedio(cuota) {
     try {
@@ -180,10 +189,11 @@ function filtrarPorFecha() {
 
 // Cargar los datos al iniciar
 document.addEventListener('DOMContentLoaded', () => {
-    // Inicializar Flatpickr
+    // Inicializar Flatpickr con la fecha actual
+    const fechaActual = getFechaActual();
     flatpickr('#fecha-picker', {
         dateFormat: 'Y-m-d',
-        defaultDate: '2025-08-21', // Fecha por defecto (puedes cambiarla)
+        defaultDate: fechaActual, // Usar la fecha actual
         locale: {
             firstDayOfWeek: 1 // Lunes como primer día de la semana
         }
@@ -197,12 +207,12 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             console.log('Datos cargados desde partidos.json:', data);
             todosLosPartidos = data; // Guardar todos los partidos
-            mostrarPartidos(todosLosPartidos); // Mostrar todos los partidos inicialmente
+            mostrarPartidos(todosLosPartidos, fechaActual); // Filtrar por la fecha actual al inicio
         })
         .catch(error => {
             console.error('Error al cargar el JSON:', error);
             console.log('Usando datos embebidos como respaldo');
             todosLosPartidos = partidosData;
-            mostrarPartidos(todosLosPartidos);
+            mostrarPartidos(todosLosPartidos, fechaActual); // Filtrar por la fecha actual al inicio
         });
 });
