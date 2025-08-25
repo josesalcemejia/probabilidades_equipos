@@ -48,7 +48,7 @@
         "liga": "España - Primera División",
         "equipo_local": "Levante",
         "equipo_visitante": "Barcelona",
-        "Rango de cuota local": "1.00 - 1.49",
+        "Rango de cuota local": "3.00 +",
         "total_partidos_local": "9",
         "victorias_local": "4",
         "empates_local": "1",
@@ -57,7 +57,7 @@
         "resultado": "2-3",
         "corners": "11",
         "tiros a puerta": "19",
-        "rango de cuota visitante": "+3.00",
+        "rango de cuota visitante": "1.00 - 1.49",
         "total_partidos_visitante": "9",
         "victorias_visitante": "8",
         "empates_visitante": "1",
@@ -65,5 +65,30 @@
         "NOTA": "Estas probabildades estan basadas en la cuota del equipo",
         "PICK": "Gana Barcelona ✅",
         "CUOTA": "1.27"
-    }
+    },
+
+    {
+        "id": 4,
+        "liga": "Inglaterra - Premier League",
+        "equipo_local": "Newcastle",
+        "equipo_visitante": "Liverpool",
+        "Rango de cuota local": "+3.00",
+        "total_partidos_local": "9",
+        "victorias_local": "3",
+        "empates_local": "2",
+        "derrotas_local": "4",
+        "fecha": "2025-08-25",
+        "resultado": "Sin resultado",
+        "corners": "Sin resultado",
+        "tiros a puerta": "Sin resultado",
+        "rango de cuota visitante": "2.00 - 2.49",
+        "total_partidos_visitante": "9",
+        "victorias_visitante": "6",
+        "empates_visitante": "2",
+        "derrotas_visitante": "1",
+        "NOTA": "Estas probabildades estan basadas en la cuota del equipo",
+        "PICK": "Gana Liverpool",
+        "CUOTA": "2.00"
+    }          
+
 ]
